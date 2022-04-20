@@ -7,15 +7,14 @@ function codeFormatter() {
     var colorHTMLString = "<span style='color:#b5612d'>";
     
 
-    var formattingEls = document.querySelectorAll(".codeFormatter");
+    var formatHTMLElems = document.querySelectorAll(".formatHTML");
 
-    for(var e = 0; e < formattingEls.length; e++) {
+    for(var e = 0; e < formatHTMLElems.length; e++) {
 
-        if(formattingEls[e].classList.contains("formatHTML")) {
             var textTemp1 = "";
             var textTemp = "";
             var currentTextTemp = "";
-            var currentText = formattingEls[e].textContent.replace(/ /g, "&nbsp;");
+            var currentText = formatHTMLElems[e].textContent.replace(/ /g, "&nbsp;");
             currentText = currentText.replace(/<br>/g, "*br*");
             currentText = currentText.replace(/<br\/>/g, "*br*");
             
@@ -229,13 +228,13 @@ function codeFormatter() {
             currentText = currentText.replace(/&#47-/g, "&#47;");
             currentText = currentText.replace(/\*br\*/g, "<br>");
             currentText = currentText.replace(/&#60-/g, "&#60;");
-                formattingEls[e].innerHTML = currentText;
+                formatHTMLElems[e].innerHTML = currentText;
 
 
                 
 
     
-        }
+        
 
 
     }
