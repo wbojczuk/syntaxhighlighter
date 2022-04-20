@@ -1,10 +1,13 @@
-document.getElementById("testDiv").textContent = '<html lang="en">\
-<head>\
-    <meta charset="UTF-8">\
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">\
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
-    <title>Code Formatting Testing</title>\
-    <link rel="stylesheet" href="style.css">\
-    <script src="script.js" defer></script>\
-    <script src="codeformatter.js" defer></script>&#10;\
+
+
+document.getElementById("testDiv").textContent ='<html lang="en">\
+<head><br>\
+        <meta charset="UTF-8"><br>\
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"><br>\
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"><br>\
+        <title>Code Formatting Testing</title><br>\
+        <link rel="stylesheet" href="style.css"><br>\
+        <script src="script.js" defer></script><br>\
+        <script src="codeformatter.js" defer></script>&#10;<br>\
+        <a href="https://google.com" target="_blank">A LINK</a><br>\
     </head>';
