@@ -1,5 +1,8 @@
+
+
 codeFormatter();
 function codeFormatter() {
+    
     var colorHTMLElement = "<span style='color:#2e5cb8'>";
     
     var colorHTMLAttribute = "<span style='color:#34dbeb'>";
@@ -15,12 +18,13 @@ function codeFormatter() {
             var textTemp = "";
             var currentTextTemp = "";
             var currentText = formatHTMLElems[e].textContent.replace(/ /g, "&nbsp;");
+            currentText = currentText.replace(/\n/g, "*br*");
             currentText = currentText.replace(/<br>/g, "*br*");
             currentText = currentText.replace(/<br\/>/g, "*br*");
             
             currentText = currentText.replace(/</g, "^^&#60-^");
             currentText = currentText.replace(/>/g, "^^&#62;^");
-            currentText = currentText.replace(/\//g, "&#47-");
+            currentText = currentText.replace(/\//g, "^&#47-");
             
             
             
@@ -107,22 +111,30 @@ function codeFormatter() {
                             tempAttribute = "&nbsp;" + colorHTMLAttribute + tempAttribute + "</span>";
         
                             var finishedElement = tempAttribute + values; 
-                            console.log(splitArray);
+                            
                             attributeContainer += finishedElement;
         
                         } else {
                             var splitArray;
-                            
-                            if (/[a-z0-9]&nbsp;/.test(g)) {
-                                splitArray = attributes[g].split(/(?<=[a-z0-9])&nbsp;/gi);
-                                splitArray[1] = "&nbsp;" + splitArray[1];
-                            } else if (/[a-z0-9]\^\^/.test(attributes[g])) {
+                            var tempAttribute;
+                            var finishedElement
+                            console.log(attributes[g])
+                            console.log(/[a-z0-9]$/.test(attributes[g]))
+                             if (/[a-z0-9]\^\^/.test(attributes[g])) {
                                 splitArray = attributes[g].split(/(?<=[a-z0-9])\^\^/gi);
                                 splitArray[1] = "^^" + splitArray[1];
-                            }
-                            var tempAttribute = splitArray[0];
-                            tempAttribute = "&nbsp;" + colorHTMLAttribute + tempAttribute + "</span>";
-                            var finishedElement = tempAttribute + splitArray[1];
+                                tempAttribute = splitArray[0];
+                                tempAttribute = "&nbsp;" + colorHTMLAttribute + tempAttribute + "</span>";
+                                finishedElement = tempAttribute + splitArray[1];
+                            }else if (/[a-z0-9]/.test(attributes[g])) {
+                                splitArray = attributes[g];
+                                splitArray[1] =  splitArray + "&nbsp;" ;
+                                tempAttribute = splitArray;
+                                tempAttribute = "&nbsp;" + colorHTMLAttribute + tempAttribute + "</span>";
+                                finishedElement = tempAttribute;
+                                console.log(splitArray)
+                            } 
+                            
                             
                             
                             attributeContainer += finishedElement;
@@ -145,6 +157,7 @@ function codeFormatter() {
             var backHTMLRegEx = /&#60-&#47-[a-z0-9]{1,}/gi;
             currentText = currentText.replace(/\^\^&#62;\^/gi, "&#62;");
             currentText =  currentText.replace(/\^\^&#60-\^/gi, "&#60-");
+            currentText = currentText.replace(/\^&#47-/g, "&#47-");
             currentText = currentText.replace(/&#47;/g, "&#47-");
             
             
