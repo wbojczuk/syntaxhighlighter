@@ -31,7 +31,7 @@ function codeFormatter() {
 
             var frontHTMLRegEx = /&#60-[a-z0-9]{1,}/gi;
 
-            var insideHTMLRegEx = /\^\^&#60-\^[a-z0-9]{1,}~{1,}[^\^]{1,}\^\^&#62;\^/gi;
+            var insideHTMLRegEx = /(\^\^&#60-\^[a-z0-9]{1,}~{1,}[^\^]{1,}\^\^&#62;\^)|(\^\^&#60-\^[a-z0-9]{1,}~{1,}[^\^]{1,}[\*]{4}\^\^&#62;\^)/gi;
             
 
             var insideMatches;
@@ -45,9 +45,9 @@ function codeFormatter() {
             for(let i = 0; i < insideAmount; i++) {
                 var currentLocation = currentText.indexOf(insideMatches[i]);
                 var currentTextLength = insideMatches[i].length;
-                var attributes = insideMatches[i].split(/(?<![,][~]*)(?<![=]["'][~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*)~(?=[^\&^])/gi);
+                var attributes = insideMatches[i].split(/(?<![,][~]*)(?<![=]["'][~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*)~(?=[^\&\*^])/gi);
                 
-                console.log(attributes);
+                
 
                 if(attributes.length < 3){
 
@@ -77,11 +77,15 @@ function codeFormatter() {
                         splitArray = attributes[attributes.length - 1].split(/(?<=[a-z0-9])\^\^/gi);
                         splitArray[1] = "^^" + splitArray[1];
                     }
+                    else if (/[a-z0-9][\*]{4}\^\^/.test(attributes[attributes.length - 1])) {
+                        splitArray = attributes[attributes.length - 1].split(/(?<=[a-z0-9])[\*]{4}\^\^/gi);
+                        splitArray[1] = "****^^" + splitArray[1];
+                    }
                     var tempAttribute = splitArray[0];
                     tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
                     var finishedElement = attributes[0] + tempAttribute + splitArray[1];
 
-                    /* CONCAT TIMEEE BOIS */
+                    /* CONCAT TIMEEE BOIS */console.log(splitArray);
 
                     var frontTemp = currentText.slice(0,currentLocation);
                     var backTemp = currentText.slice(currentLocation + currentTextLength);
@@ -120,14 +124,21 @@ function codeFormatter() {
                             var tempAttribute;
                             var finishedElement
                             
-                            
-                             if (/[a-z0-9]\^\^/.test(attributes[g])) {
-                                splitArray = attributes[g].split(/(?<=[a-z0-9])\^\^/gi);
+                            if (/[a-z0-9][~'"]*[\*]{4}\^\^/.test(attributes[g])) {
+                                splitArray = attributes[g].split(/(?<=[a-z0-9][~'"]*)[\*]{4}\^\^/gi);
+                                splitArray[1] = "****^^" + splitArray[1];
+                                tempAttribute = splitArray[0];
+                                console.log(splitArray)
+                                tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
+                                finishedElement = tempAttribute + splitArray[1];
+                            } else if (/[a-z0-9][~'"]*\^\^/.test(attributes[g])) {
+                                splitArray = attributes[g].split(/(?<=[a-z0-9][~'"]*)\^\^/gi);
                                 splitArray[1] = "^^" + splitArray[1];
                                 tempAttribute = splitArray[0];
                                 tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
                                 finishedElement = tempAttribute + splitArray[1];
                             }else if (/[a-z0-9]/.test(attributes[g])) {
+                                console.log("hey")
                                 splitArray = attributes[g];
                                 splitArray[1] =  splitArray + "~" ;
                                 tempAttribute = splitArray;
@@ -139,6 +150,7 @@ function codeFormatter() {
                             
                             
                             attributeContainer += finishedElement;
+                            console.log(attributeContainer)
     
                     }
     
