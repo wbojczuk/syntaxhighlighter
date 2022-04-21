@@ -1,6 +1,6 @@
 
 
-document.getElementById("testDiv").textContent ='<html lang="en">\
+document.getElementById("testDiv").textContent ='<html lang="en"><br>\
 <head><br>\
         <meta charset="UTF-8"><br>\
         <meta http-equiv="X-UA-Compatible" content="IE=edge"><br>\
