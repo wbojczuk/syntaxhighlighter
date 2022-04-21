@@ -17,21 +17,22 @@ function codeFormatter() {
             var textTemp1 = "";
             var textTemp = "";
             var currentTextTemp = "";
-            var currentText = formatHTMLElems[e].textContent.replace(/ /g, "&nbsp;");
+            var currentText = formatHTMLElems[e].textContent.replace(/ /g, "~");
             currentText = currentText.replace(/\n/g, "*br*");
             currentText = currentText.replace(/<br>/g, "*br*");
             currentText = currentText.replace(/<br\/>/g, "*br*");
-            
+            currentText = currentText.replace(/\//g, "****");
             currentText = currentText.replace(/</g, "^^&#60-^");
             currentText = currentText.replace(/>/g, "^^&#62;^");
-            currentText = currentText.replace(/\//g, "^&#47-");
+            
             
             
             
 
             var frontHTMLRegEx = /&#60-[a-z0-9]{1,}/gi;
 
-            var insideHTMLRegEx = /\^\^&#60-\^[a-z0-9]{1,}&nbsp;{1,}[^\^]{1,}\^\^&#62;\^/gi;
+            var insideHTMLRegEx = /\^\^&#60-\^[a-z0-9]{1,}~{1,}[^\^]{1,}\^\^&#62;\^/gi;
+            
 
             var insideMatches;
             var insideAmount = 0;
@@ -44,9 +45,9 @@ function codeFormatter() {
             for(let i = 0; i < insideAmount; i++) {
                 var currentLocation = currentText.indexOf(insideMatches[i]);
                 var currentTextLength = insideMatches[i].length;
-                var attributes = insideMatches[i].split(/(?<!,)&nbsp;(?=[^\&^])/gi);
+                var attributes = insideMatches[i].split(/(?<![,][~]*)(?<![=]["'][~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*)~(?=[^\&^])/gi);
                 
-                
+                console.log(attributes);
 
                 if(attributes.length < 3){
 
@@ -56,7 +57,7 @@ function codeFormatter() {
                     var values = splitArray[1];
                     values = "=" + values;
                     
-                    tempAttribute = "&nbsp;" + colorHTMLAttribute + tempAttribute + "</span>";
+                    tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
 
                     var finishedElement = attributes[0] + tempAttribute + values; 
                     
@@ -69,15 +70,15 @@ function codeFormatter() {
 
                 } else {
                     var splitArray;
-                    if (/[a-z0-9]&nbsp;/.test(attributes[attributes.length - 1])) {
-                        splitArray = attributes[attributes.length - 1].split(/(?<=[a-z0-9])&nbsp;/gi);
-                        splitArray[1] = "&nbsp;" + splitArray[1];
+                    if (/[a-z0-9]~/.test(attributes[attributes.length - 1])) {
+                        splitArray = attributes[attributes.length - 1].split(/(?<=[a-z0-9])~/gi);
+                        splitArray[1] = "~" + splitArray[1];
                     } else if (/[a-z0-9]\^\^/.test(attributes[attributes.length - 1])) {
                         splitArray = attributes[attributes.length - 1].split(/(?<=[a-z0-9])\^\^/gi);
                         splitArray[1] = "^^" + splitArray[1];
                     }
                     var tempAttribute = splitArray[0];
-                    tempAttribute = "&nbsp;" + colorHTMLAttribute + tempAttribute + "</span>";
+                    tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
                     var finishedElement = attributes[0] + tempAttribute + splitArray[1];
 
                     /* CONCAT TIMEEE BOIS */
@@ -108,7 +109,7 @@ function codeFormatter() {
                             }
                             
                             
-                            tempAttribute = "&nbsp;" + colorHTMLAttribute + tempAttribute + "</span>";
+                            tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
         
                             var finishedElement = tempAttribute + values; 
                             
@@ -118,21 +119,21 @@ function codeFormatter() {
                             var splitArray;
                             var tempAttribute;
                             var finishedElement
-                            console.log(attributes[g])
-                            console.log(/[a-z0-9]$/.test(attributes[g]))
+                            
+                            
                              if (/[a-z0-9]\^\^/.test(attributes[g])) {
                                 splitArray = attributes[g].split(/(?<=[a-z0-9])\^\^/gi);
                                 splitArray[1] = "^^" + splitArray[1];
                                 tempAttribute = splitArray[0];
-                                tempAttribute = "&nbsp;" + colorHTMLAttribute + tempAttribute + "</span>";
+                                tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
                                 finishedElement = tempAttribute + splitArray[1];
                             }else if (/[a-z0-9]/.test(attributes[g])) {
                                 splitArray = attributes[g];
-                                splitArray[1] =  splitArray + "&nbsp;" ;
+                                splitArray[1] =  splitArray + "~" ;
                                 tempAttribute = splitArray;
-                                tempAttribute = "&nbsp;" + colorHTMLAttribute + tempAttribute + "</span>";
+                                tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
                                 finishedElement = tempAttribute;
-                                console.log(splitArray)
+                                
                             } 
                             
                             
@@ -154,11 +155,14 @@ function codeFormatter() {
             }
             
 
-            var backHTMLRegEx = /&#60-&#47-[a-z0-9]{1,}/gi;
+            
             currentText = currentText.replace(/\^\^&#62;\^/gi, "&#62;");
             currentText =  currentText.replace(/\^\^&#60-\^/gi, "&#60-");
+            currentText = currentText.replace(/\*\*\*\*/g, "&#47-");
             currentText = currentText.replace(/\^&#47-/g, "&#47-");
             currentText = currentText.replace(/&#47;/g, "&#47-");
+            currentText = currentText.replace(/~/g, "&nbsp;");
+            var backHTMLRegEx = /&#60-&#47-[a-z0-9]{1,}/gi;
             
             
 
