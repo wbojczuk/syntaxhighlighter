@@ -48,7 +48,7 @@ function codeFormatter() {
 
                 console.log(insideMatches)
                 
-                var attributes = insideMatches[i].split(/(?<![,][~]*)(?<![=]["'][a-z0-9.-]*[~]*[=][~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*)~(?=[^~][^\&\*^])/gi);
+                var attributes = insideMatches[i].split(/(?<![=][,"][^'"]*[~]*[^'"]*[~]*[^'"]*[~]*[^'"]*[~]*[^'"]*[~]*[^'"]*[~]*)(?<![=]["'][a-z0-9.-]*[~]*[=][~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*)~(?=[^~][^\&\*^])/gi);
                 
                 
                 console.log(attributes)
