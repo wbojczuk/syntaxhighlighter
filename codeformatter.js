@@ -45,17 +45,26 @@ function codeFormatter() {
             for(let i = 0; i < insideAmount; i++) {
                 var currentLocation = currentText.indexOf(insideMatches[i]);
                 var currentTextLength = insideMatches[i].length;
-                var attributes = insideMatches[i].split(/(?<![,][~]*)(?<![=]["'][~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*)~(?=[^\&\*^])/gi);
-                
-                
 
+                console.log(insideMatches)
+                
+                var attributes = insideMatches[i].split(/(?<![,][~]*)(?<![=]["'][a-z0-9.-]*[~]*[=][~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*)~(?=[^~][^\&\*^])/gi);
+                
+                
+                console.log(attributes)
                 if(attributes.length < 3){
 
                 if (/=/.test(attributes[attributes.length - 1])) {
-                    var splitArray = attributes[attributes.length - 1].split(/=/gi);
+                    
+                    if ( attributes[attributes.length - 1].match(/=/g).length > 1) {
+
+                        console.log("what")
+                    }
+                    var splitArray = attributes[attributes.length - 1].split(/=(?=['"])/gi);
                     var tempAttribute = splitArray[0];
                     var values = splitArray[1];
                     values = "=" + values;
+                    
                     
                     tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
 
@@ -70,22 +79,26 @@ function codeFormatter() {
 
                 } else {
                     var splitArray;
-                    if (/[a-z0-9]~/.test(attributes[attributes.length - 1])) {
-                        splitArray = attributes[attributes.length - 1].split(/(?<=[a-z0-9])~/gi);
+                    if (/[a-z0-9][~](?![~]*\^\^)/.test(attributes[attributes.length - 1])) {
+                        console.log("hiw")
+                        splitArray = attributes[attributes.length - 1].split(/(?<=[a-z0-9])[~](?![~]*\^\^)/gi);
                         splitArray[1] = "~" + splitArray[1];
-                    } else if (/[a-z0-9]\^\^/.test(attributes[attributes.length - 1])) {
-                        splitArray = attributes[attributes.length - 1].split(/(?<=[a-z0-9])\^\^/gi);
+                    } else if (/[a-z0-9=][~]*\^\^/.test(attributes[attributes.length - 1])) {
+                        console.log("hi")
+                        splitArray = attributes[attributes.length - 1].split(/(?<=[a-z0-9])[~]*\^\^/gi);
                         splitArray[1] = "^^" + splitArray[1];
+                        
                     }
-                    else if (/[a-z0-9][\*]{4}\^\^/.test(attributes[attributes.length - 1])) {
-                        splitArray = attributes[attributes.length - 1].split(/(?<=[a-z0-9])[\*]{4}\^\^/gi);
+                    else if (/[a-z0-9][~]*[\*]{4}\^\^/.test(attributes[attributes.length - 1])) {
+                        splitArray = attributes[attributes.length - 1].split(/(?<=[a-z0-9])[~]*[\*]{4}\^\^/gi);
                         splitArray[1] = "****^^" + splitArray[1];
-                    }
+                        console.log("hiss")
+                    } 
                     var tempAttribute = splitArray[0];
                     tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
                     var finishedElement = attributes[0] + tempAttribute + splitArray[1];
-
-                    /* CONCAT TIMEEE BOIS */console.log(splitArray);
+                    if (/\^/.test(splitArray[0])){finishedElement = attributes[attributes.length - 1];};
+                    /* CONCAT TIMEEE BOIS */
 
                     var frontTemp = currentText.slice(0,currentLocation);
                     var backTemp = currentText.slice(currentLocation + currentTextLength);
@@ -128,15 +141,17 @@ function codeFormatter() {
                                 splitArray = attributes[g].split(/(?<=[a-z0-9][~'"]*)[\*]{4}\^\^/gi);
                                 splitArray[1] = "****^^" + splitArray[1];
                                 tempAttribute = splitArray[0];
-                                console.log(splitArray)
+                                console.log("h")
                                 tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
                                 finishedElement = tempAttribute + splitArray[1];
+                                
                             } else if (/[a-z0-9][~'"]*\^\^/.test(attributes[g])) {
                                 splitArray = attributes[g].split(/(?<=[a-z0-9][~'"]*)\^\^/gi);
                                 splitArray[1] = "^^" + splitArray[1];
                                 tempAttribute = splitArray[0];
                                 tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
                                 finishedElement = tempAttribute + splitArray[1];
+                                console.log("he")
                             }else if (/[a-z0-9]/.test(attributes[g])) {
                                 console.log("hey")
                                 splitArray = attributes[g];
@@ -144,14 +159,15 @@ function codeFormatter() {
                                 tempAttribute = splitArray;
                                 tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
                                 finishedElement = tempAttribute;
+                               
                                 
                             } 
                             
                             
                             
                             attributeContainer += finishedElement;
+                            
                             console.log(attributeContainer)
-    
                     }
     
                 }
