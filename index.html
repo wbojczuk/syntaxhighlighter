@@ -4,33 +4,44 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Formatting Testing</title>
+    <title>Syntax Highlighting Demo</title>
     <link rel="stylesheet" href="style.css">
     <script src="syntaxhighlighter.js" defer></script>
     
 </head>
 <body>
     <div id="mainWrapper">
-<div class="title">syntaxhighlighter.js</div>
+<div class="center"><span class="title">syntaxhighlighter.js</span></div>
    <div class="center"><div id="testDiv" class="syntaxHTML"></div></div> 
 <div class="center"><button id="editCode">Edit Code</button></div>
 </div>
 <div id="typeCodeContainer" spellcheck="false">
     <textarea id="typeCode" cols="30" rows="10"></textarea>
+    <div id="closeEditor">&times;</div>
    <div class="center"> <button id="submitCode">Submit Code</button></div>
 </div>
     
 <script src="script.js"></script>
 <script defer>document.getElementById("submitCode").addEventListener("click", getCode);
+var valueTempHereLOL = "";
     document.getElementById("typeCode").value = document.getElementById("testDiv").textContent.replace(/(<br[ ]*>)|(<br[ ]*\/>)/gi,"\n");
     document.getElementById("editCode").addEventListener("click", function(){
-        document.getElementById("typeCodeContainer").style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+        document.getElementById("typeCodeContainer").style.display = "block";
         document.getElementById("typeCodeContainer").style.top = "0";
+        valueTempHereLOL = document.getElementById("typeCode").value;
+    });
+
+    document.getElementById("closeEditor").addEventListener("click", function(){
+        document.getElementById("typeCodeContainer").style.top = "100vh";
+        document.getElementById("typeCodeContainer").style.display = "none";
+        document.getElementById("typeCode").value = valueTempHereLOL;
+
     });
     
     function getCode() {
         document.getElementById("testDiv").textContent = document.getElementById("typeCode").value;
         document.getElementById("typeCodeContainer").style.top = "100vh";
+        document.getElementById("typeCodeContainer").style.display = "none";
         syntaxHighlighterScript();
     }</script>
 </body>

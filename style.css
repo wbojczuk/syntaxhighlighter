@@ -8,6 +8,7 @@
     font-size: 5vw;
     color: #34dbeb;
     font-family: 'Source Code Pro', monospace;
+    border-bottom: 4px solid #34dbeb;
 }
 
 .center {
@@ -38,18 +39,36 @@ body {
     width: 100%;
     margin-top: 10vh;
     font-size: 2vw;
-    height: 60%;
+    height: 70%;
     background-color: rgba(47, 47, 47, 1);
     color: white;
     
 }
 
+#closeEditor {
+    display: inline-block;
+    position: absolute;
+    top: 10vh;
+    color: white;
+    width: 4vw;
+    height: 4vw;
+    font-size: 4vw;
+    right: 1vw;
+    font-weight: 700;
+}
+
+#closeEditor:hover {
+    cursor: pointer;
+    color: rgb(176, 176, 176);
+}
+
 #typeCodeContainer {
-    
+    background-color: rgba(0, 0, 0, 0.8);
     position: absolute;
     width: 100vw;
     height: 100vh;
     top: 100vh;
+    display: none;
 }
 
 button {
