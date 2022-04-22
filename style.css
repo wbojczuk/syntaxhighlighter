@@ -73,13 +73,18 @@ body {
 
 button {
 cursor: pointer;
-padding: 1vw 2vw;
-font-size: large;
+padding: 1vw 3vw;
+font-size: 2vw;
 background-color: rgb(60, 60, 60);
-color: rgb(111, 205, 255);
+color: #34dbeb;
+
 }
 button:hover {
     background-color: rgb(94, 94, 94);
+}
+#submitCode {
+    font-family: 'Source Code Pro', monospace;
+    color: white;
 }
 #editCode {
     margin-top: 1vw;
