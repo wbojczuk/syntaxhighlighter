@@ -6,24 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Formatting Testing</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
     <script src="syntaxhighlighter.js" defer></script>
     
 </head>
 <body>
-
+    <div id="mainWrapper">
+<div class="title">syntaxhighlighter.js</div>
    <div class="center"><div id="testDiv" class="syntaxHTML"></div></div> 
 <div class="center"><button id="editCode">Edit Code</button></div>
-
-<div id="typeCodeContainer">
+</div>
+<div id="typeCodeContainer" spellcheck="false">
     <textarea id="typeCode" cols="30" rows="10"></textarea>
    <div class="center"> <button id="submitCode">Submit Code</button></div>
 </div>
     
-
+<script src="script.js"></script>
 <script defer>document.getElementById("submitCode").addEventListener("click", getCode);
-
+    document.getElementById("typeCode").value = document.getElementById("testDiv").textContent.replace(/(<br[ ]*>)|(<br[ ]*\/>)/gi,"\n");
     document.getElementById("editCode").addEventListener("click", function(){
+        document.getElementById("typeCodeContainer").style.backgroundColor = "rgba(0, 0, 0, 0.8)";
         document.getElementById("typeCodeContainer").style.top = "0";
     });
     
