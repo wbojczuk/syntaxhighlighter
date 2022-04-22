@@ -1,34 +1,52 @@
 
+var syntaxHighlighter = {
 
-codeFormatter();
-function codeFormatter() {
+
+// START HTML OPTIONS
+
+// TEXT COLOR
+    HTMLTextColor: "white",
+
+// COLOR SETTINGS
+    HTMLAttributeColor: "#34dbeb",
+    HTMLElementColor: "#2e5cb8",
+    HTMLStringColor: "#b5612d",
+    HTMLCommentColor: "#178a00",
+    HTMLDoctypeColor: "#4576d6",
+    HTMLElementCOTagsColor: "rgba(130, 130, 130, 0.788)",
     
-    var colorHTMLElement = "<span style='color:#2e5cb8'>";
+    // DON'T PROCESS <br>,<br/>
+    HTMLKeepBR: true
+
+    // END HTML OPTIONS
+};
+
+syntaxHighlighterScript();
+function syntaxHighlighterScript() {
     
-    var colorHTMLAttribute = "<span style='color:#34dbeb'>";
+    var colorHTMLElement = "<span style='color:" + syntaxHighlighter.HTMLElementColor + "'>";
+    
+    var colorHTMLAttribute = "<span style='color:" + syntaxHighlighter.HTMLAttributeColor + "'>";
 
-    var colorHTMLString = "<span style='color:#b5612d'>";
+    var colorHTMLString = "<span style='color:" + syntaxHighlighter.HTMLStringColor + "'>";
 
-    var colorHTMLDoctype = "<span style='color:#4576d6'>";
+    var colorHTMLDoctype = "<span style='color:" + syntaxHighlighter.HTMLDoctypeColor + "'>";
 
-    var colorHTMLComment = "<span style='color:#178a00'>";
+    var colorHTMLComment = "<span style='color:" + syntaxHighlighter.HTMLCommentColor + "'>";
 
-    var colorHTMLCOTags = "<span style='color:rgba(130, 130, 130, 0.788)'>";
-
-    var textColor = "white";
+    var colorHTMLCOTags = "<span style='color:" + syntaxHighlighter.HTMLElementCOTagsColor + "'>";
     
 
-    var formatHTMLElems = document.querySelectorAll(".formatHTML");
+    var formatHTMLElems = document.querySelectorAll(".syntaxHTML");
 
     for(var e = 0; e < formatHTMLElems.length; e++) {
-        formatHTMLElems[e].style.color = textColor;
-            var textTemp1 = "";
-            var textTemp = "";
-            var currentTextTemp = "";
+        formatHTMLElems[e].style.color = syntaxHighlighter.HTMLTextColor;
             var currentText = formatHTMLElems[e].textContent.replace(/ /g, "~");
             currentText = currentText.replace(/\n/g, "*br*");
-            currentText = currentText.replace(/<br>/g, "*br*");
-            currentText = currentText.replace(/<br\/>/g, "*br*");
+            if(syntaxHighlighter.HTMLKeepBR) {
+                currentText = currentText.replace(/<br[~]*>/g, "*br*");
+                currentText = currentText.replace(/<br[~]*\/>/g, "*br*");
+            }
             currentText = currentText.replace(/\//g, "****");
             currentText = currentText.replace(/</g, "^^&#60-^");
             currentText = currentText.replace(/>/g, "^^&#62;^");
@@ -58,7 +76,7 @@ function codeFormatter() {
 
                 
                 
-                var attributes = insideMatches[i].split(/(?<![=][,"\!][^'"\!]*[~]*[^'"\!]*[~]*[^'"\!]*[~]*[^'"\!]*[~]*[^'"\!]*[~]*[^'"\!]*[~]*)~(?=[^~][^\&\*^])/gi);
+                var attributes = insideMatches[i].split(/(?<![=][,"\!][^"\!]*[~]*[^"\!]*[~]*[^"\!]*[~]*[^"\!]*[~]*[^"\!]*[~]*[^"\!]*[~]*)~(?=[^~][^\&\*^])/gi);
                 
                 
                 
@@ -261,7 +279,6 @@ function codeFormatter() {
             var frontTemp = currentText.slice(0, currentLocation);
 
             var actualDoc = doctypeMatches[i].match(/[a-z]{1,}/gi);
-            console.log(actualDoc)
             
             var backTemp = currentText.slice(currentLocation + textLength);
 
@@ -269,35 +286,10 @@ function codeFormatter() {
 
         }
 
+        currentText = currentText.replace(/~/g, "&nbsp;");
+        currentText = currentText.replace(/\^\^&#60-\^\![-]{2}/gi, "~");
+
         
-
-        // COMMENTS 
-
-
-        var commentHTMLRegEx = /\^\^&#60-\^\![-]{2}[^\!]{1,}[-]{2}\^\^&#62;\^/gi;
-
-        var commentHTMLMatches = currentText.match(commentHTMLRegEx);
-        var commentHTMLMatchesLength = 0;
-
-        if (commentHTMLRegEx.test(currentText)) {
-            commentHTMLMatchesLength = commentHTMLMatches.length;
-        }
-
-        for (let i = 0; i < commentHTMLMatchesLength; i++) {
-            var currentLocation = currentText.indexOf(commentHTMLMatches[i]);
-            var textLength = commentHTMLMatches[i].length;
-            var frontTemp = currentText.slice(0, currentLocation);
-            
-            var backTemp = currentText.slice(currentLocation + textLength);
-
-            currentText = frontTemp + colorHTMLComment + commentHTMLMatches[i] + "</span>" + backTemp;
-
-        }
-
-            
-            
-            /* RE-encode some things */
-            
             currentText =  currentText.replace(/\^\^&#60-\^/gi, "&#60-");
             // currentText = currentText.replace(/\*\*\*\*/g, "^&#47;");
             
@@ -411,7 +403,6 @@ function codeFormatter() {
             for(let i = 0; i < backAmount; i++) {
                 
                 var currentLocation = currentText.indexOf(currentText.match(backHTMLRegEx)[0]);
-                var textLocation = currentLocation + 9;
 
                 var currentMatchString = currentText.match(backHTMLRegEx)[0].slice(9);
 
@@ -438,9 +429,54 @@ function codeFormatter() {
                 
                 
             }
+
+            // COMMENTS 
+
+       
+        var commentHTMLRegEx = /~[^\~]{1,}[-]{2}\^\^&#62;\^/gi;
+
+        var commentHTMLMatches = currentText.match(commentHTMLRegEx);
+        var commentHTMLMatchesLength = 0;
+
+        if (commentHTMLRegEx.test(currentText)) {
+            commentHTMLMatchesLength = commentHTMLMatches.length;
+        }
+
+        for (let i = 0; i < commentHTMLMatchesLength; i++) {
+            var currentLocation = currentText.indexOf(commentHTMLMatches[i]);
+            var textLength = commentHTMLMatches[i].length;
+            var frontTemp = currentText.slice(0, currentLocation);
+            
+            var backTemp = currentText.slice(currentLocation + textLength);
+            
+
+            // REPLACE COLORS WITH COMMENT COLORS
+            var extraColorsRegEx = /<span style='color:[^'>]*'>/gi;
+            var extraColorsLength = 0;
+            var extraColorsMatches = commentHTMLMatches[i].match(extraColorsRegEx);
+            if (extraColorsRegEx.test(commentHTMLMatches[i])){
+                extraColorsLength = extraColorsMatches.length;
+            }
+            for(let y = 0; y < extraColorsLength; y++) {
+                var currentColorLocation = commentHTMLMatches[i].indexOf(extraColorsMatches[y]);
+                var currentColorLength = extraColorsMatches[y].length;
+                var frontColorTemp = commentHTMLMatches[i].slice(0, currentColorLocation);
+                var backColorTemp = commentHTMLMatches[i].slice(currentColorLocation + currentColorLength);
+                commentHTMLMatches[i] = frontColorTemp + colorHTMLComment + backColorTemp;
+
+            }
+
+            currentText = frontTemp + colorHTMLComment + commentHTMLMatches[i] + "</span>" + backTemp;
+
+        }
+
+            
+            
+            /* RE-encode some things */
+            currentText = currentText.replace(/~/gi,"&#60-!--"); 
             currentText = currentText.replace(/\*\*\*\*/g, "&#47;");
             currentText = currentText.replace(/\^\^&#62;\^/gi, "&#62;");
-            currentText = currentText.replace(/~/g, "&nbsp;");
+            
             currentText = currentText.replace(/\*br\*/g, "<br>");
             currentText = currentText.replace(/&#60-/g, "&#60;");
             

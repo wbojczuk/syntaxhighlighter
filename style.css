@@ -11,7 +11,7 @@
     font-size: 1.5vw;
     width: 90vw;
     max-height: 80vh;
-    background-color: rgba(47, 47, 47, 0.564);
+    
     border: 1px solid rgb(111, 205, 255);
     overflow-y: scroll;
 }
