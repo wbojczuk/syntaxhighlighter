@@ -1,3 +1,12 @@
+/*
+ Program: syntaxhighlighter.js
+ Version: 1.0
+ Creator: William Bojczuk (wiliambojcuzk@gmail.com)
+ License: BSD
+ Github: https://github.com/wbojczuk
+ Website: https://williambojczuk.com
+ 
+ */
 
 var syntaxHighlighter = {
 
@@ -33,6 +42,8 @@ function syntaxHighlighterScript() {
     var colorHTMLDoctype = "<span style='color:" + syntaxHighlighter.HTMLDoctypeColor + "'>";
 
     var colorHTMLComment = "<span style='color:" + syntaxHighlighter.HTMLCommentColor + "'>";
+
+    var HTMLLinkStyle = "<span style='text-decoration:underline'>";
 
     var colorHTMLCOTags = "<span style='color:" + syntaxHighlighter.HTMLElementCOTagsColor + "'>";
     
@@ -470,7 +481,25 @@ function syntaxHighlighterScript() {
 
         }
 
-            
+        // links
+
+        var HTMLLinkRegEx = /(https|http):\*\*\*\*\*\*\*\*[^~\^"'\)\()]*/gi;
+        var HTMLLinkMatchesLength = 0;
+        var HTMLLinkMatches = currentText.match(HTMLLinkRegEx);
+            if(HTMLLinkRegEx.test(currentText)) {
+                HTMLLinkMatchesLength = HTMLLinkMatches.length;
+            }
+
+            for (let i = 0; i < HTMLLinkMatchesLength; i++) {
+                var currentLocation = currentText.indexOf(HTMLLinkMatches[i]);
+                var currentTextLength = HTMLLinkMatches[i].length;
+                var finishedElement = HTMLLinkStyle + HTMLLinkMatches[i] + "</span>";
+
+                var frontTemp = currentText.slice(0,currentLocation);
+                var backTemp = currentText.slice(currentLocation + currentTextLength);
+                currentText = frontTemp + finishedElement + backTemp;
+            }
+        
             
             /* RE-encode some things */
             currentText = currentText.replace(/~/gi,"&#60-!--"); 
