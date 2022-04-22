@@ -8,12 +8,18 @@ function codeFormatter() {
     var colorHTMLAttribute = "<span style='color:#34dbeb'>";
 
     var colorHTMLString = "<span style='color:#b5612d'>";
+
+    var colorHTMLDoctype = "<span style='color:#4576d6'>";
+
+    var colorHTMLComment = "<span style='color:#178a00'>";
+
+    var textColor = "white";
     
 
     var formatHTMLElems = document.querySelectorAll(".formatHTML");
 
     for(var e = 0; e < formatHTMLElems.length; e++) {
-
+        formatHTMLElems[e].style.color = textColor;
             var textTemp1 = "";
             var textTemp = "";
             var currentTextTemp = "";
@@ -31,7 +37,7 @@ function codeFormatter() {
 
             var frontHTMLRegEx = /&#60-[a-z0-9]{1,}/gi;
 
-            var insideHTMLRegEx = /(\^\^&#60-\^[a-z0-9]{1,}~{1,}[^\^]{1,}\^\^&#62;\^)|(\^\^&#60-\^[a-z0-9]{1,}~{1,}[^\^]{1,}[\*]{4}\^\^&#62;\^)/gi;
+            var insideHTMLRegEx = /(\^\^&#60-\^[\!]*[a-z0-9]{1,}~{1,}[^\^]{1,}\^\^&#62;\^)|(\^\^&#60-\^[a-z0-9]{1,}~{1,}[^\^]{1,}[\*]{4}\^\^&#62;\^)/gi;
             
 
             var insideMatches;
@@ -43,22 +49,24 @@ function codeFormatter() {
 
              
             for(let i = 0; i < insideAmount; i++) {
+                
+                
                 var currentLocation = currentText.indexOf(insideMatches[i]);
                 var currentTextLength = insideMatches[i].length;
 
-                console.log(insideMatches)
-                
-                var attributes = insideMatches[i].split(/(?<![=][,"][^'"]*[~]*[^'"]*[~]*[^'"]*[~]*[^'"]*[~]*[^'"]*[~]*[^'"]*[~]*)(?<![=]["'][a-z0-9.-]*[~]*[=][~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*[a-z0-9.-]*[~]*)~(?=[^~][^\&\*^])/gi);
                 
                 
-                console.log(attributes)
+                var attributes = insideMatches[i].split(/(?<![=][,"\!][^'"\!]*[~]*[^'"\!]*[~]*[^'"\!]*[~]*[^'"\!]*[~]*[^'"\!]*[~]*[^'"\!]*[~]*)~(?=[^~][^\&\*^])/gi);
+                
+                
+                
                 if(attributes.length < 3){
 
                 if (/=/.test(attributes[attributes.length - 1])) {
                     
                     if ( attributes[attributes.length - 1].match(/=/g).length > 1) {
 
-                        console.log("what")
+                        
                     }
                     var splitArray = attributes[attributes.length - 1].split(/=(?=['"])/gi);
                     var tempAttribute = splitArray[0];
@@ -80,11 +88,11 @@ function codeFormatter() {
                 } else {
                     var splitArray;
                     if (/[a-z0-9][~](?![~]*\^\^)/.test(attributes[attributes.length - 1])) {
-                        console.log("hiw")
+                        
                         splitArray = attributes[attributes.length - 1].split(/(?<=[a-z0-9])[~](?![~]*\^\^)/gi);
                         splitArray[1] = "~" + splitArray[1];
                     } else if (/[a-z0-9=][~]*\^\^/.test(attributes[attributes.length - 1])) {
-                        console.log("hi")
+                        
                         splitArray = attributes[attributes.length - 1].split(/(?<=[a-z0-9])[~]*\^\^/gi);
                         splitArray[1] = "^^" + splitArray[1];
                         
@@ -92,7 +100,7 @@ function codeFormatter() {
                     else if (/[a-z0-9][~]*[\*]{4}\^\^/.test(attributes[attributes.length - 1])) {
                         splitArray = attributes[attributes.length - 1].split(/(?<=[a-z0-9])[~]*[\*]{4}\^\^/gi);
                         splitArray[1] = "****^^" + splitArray[1];
-                        console.log("hiss")
+                        
                     } 
                     var tempAttribute = splitArray[0];
                     tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
@@ -141,7 +149,7 @@ function codeFormatter() {
                                 splitArray = attributes[g].split(/(?<=[a-z0-9][~'"]*)[\*]{4}\^\^/gi);
                                 splitArray[1] = "****^^" + splitArray[1];
                                 tempAttribute = splitArray[0];
-                                console.log("h")
+                                
                                 tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
                                 finishedElement = tempAttribute + splitArray[1];
                                 
@@ -151,9 +159,9 @@ function codeFormatter() {
                                 tempAttribute = splitArray[0];
                                 tempAttribute = "~" + colorHTMLAttribute + tempAttribute + "</span>";
                                 finishedElement = tempAttribute + splitArray[1];
-                                console.log("he")
+                                
                             }else if (/[a-z0-9]/.test(attributes[g])) {
-                                console.log("hey")
+                                
                                 splitArray = attributes[g];
                                 splitArray[1] =  splitArray + "~" ;
                                 tempAttribute = splitArray;
@@ -167,7 +175,7 @@ function codeFormatter() {
                             
                             attributeContainer += finishedElement;
                             
-                            console.log(attributeContainer)
+                            
                     }
     
                 }
@@ -181,9 +189,83 @@ function codeFormatter() {
                 
                 
             }
+
+            // STRINGS
+            var stringHTMLRegEx = /(?<==)["](?=.*["])/gi;
+
+            var htmlMatches = currentText.match(insideHTMLRegEx);
+            var htmlMatchesLength = 0;
+            if (stringHTMLRegEx.test(currentText)) {
+                htmlMatchesLength = htmlMatches.length;
+            }
+            for(var i = 0; i < htmlMatchesLength; i++) {
+                var currentLocation = currentText.indexOf(htmlMatches[i]);
+                var currentTextLength = htmlMatches[i].length;
+
+                var stringMatches = htmlMatches[i].split(stringHTMLRegEx);
+                var stringContainer = stringMatches[0];
+               
+                
+                for ( var l = 1; l < stringMatches.length; l++) {
+                    var snippedStringsAgain = stringMatches[l].split(/["]/);
+                    var tempString = colorHTMLString + '"' + snippedStringsAgain[0] + '"' + "</span>" + snippedStringsAgain[1];
+                    
+                    stringContainer += tempString;
+                   
+
+                }
+                var frontTemp = currentText.slice(0,currentLocation);
+                var backTemp = currentText.slice(currentLocation + currentTextLength);
+                currentText = frontTemp + stringContainer + backTemp;
+   
             
+        }
+
+        // DOCTYPE 
+        var doctypeHTMLRegEx = /(?<=\^\^&#60-\^\!)[a-z0-9]{1,}(?=~)/gi;
+        var doctypeMatches = currentText.match(doctypeHTMLRegEx);
+        var doctypeMatchesLength = 0;
+        if (doctypeHTMLRegEx.test(currentText)) {
+            doctypeMatchesLength = doctypeMatches.length;
+        }
+
+        for (let i = 0; i < doctypeMatchesLength; i++) {
+            var currentLocation = currentText.indexOf(doctypeMatches[i]);
+            var textLength = doctypeMatches[i].length;
+            var frontTemp = currentText.slice(0, currentLocation);
+            
+            var backTemp = currentText.slice(currentLocation + textLength);
+
+            currentText = frontTemp + colorHTMLDoctype + doctypeMatches[i] + "</span>" + backTemp;
+
+        }
+
+        // COMMENTS 
+
+
+        var commentHTMLRegEx = /\^\^&#60-\^\![-]{2}[^\!]{1,}[-]{2}\^\^&#62;\^/gi;
+
+        var commentHTMLMatches = currentText.match(commentHTMLRegEx);
+        var commentHTMLMatchesLength = 0;
+
+        if (commentHTMLRegEx.test(currentText)) {
+            commentHTMLMatchesLength = commentHTMLMatches.length;
+        }
+
+        for (let i = 0; i < commentHTMLMatchesLength; i++) {
+            var currentLocation = currentText.indexOf(commentHTMLMatches[i]);
+            var textLength = commentHTMLMatches[i].length;
+            var frontTemp = currentText.slice(0, currentLocation);
+            
+            var backTemp = currentText.slice(currentLocation + textLength);
+
+            currentText = frontTemp + colorHTMLComment + commentHTMLMatches[i] + "</span>" + backTemp;
+
+        }
 
             
+            
+            /* RE-encode some things */
             currentText = currentText.replace(/\^\^&#62;\^/gi, "&#62;");
             currentText =  currentText.replace(/\^\^&#60-\^/gi, "&#60-");
             currentText = currentText.replace(/\*\*\*\*/g, "&#47-");
