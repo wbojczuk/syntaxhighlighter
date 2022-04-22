@@ -13,6 +13,8 @@ function codeFormatter() {
 
     var colorHTMLComment = "<span style='color:#178a00'>";
 
+    var colorHTMLCOTags = "<span style='color:rgba(130, 130, 130, 0.788)'>";
+
     var textColor = "white";
     
 
@@ -35,7 +37,7 @@ function codeFormatter() {
             
             
 
-            var frontHTMLRegEx = /&#60-[a-z0-9]{1,}/gi;
+            
 
             var insideHTMLRegEx = /(\^\^&#60-\^[\!]*[a-z0-9]{1,}~{1,}[^\^]{1,}\^\^&#62;\^)|(\^\^&#60-\^[a-z0-9]{1,}~{1,}[^\^]{1,}[\*]{4}\^\^&#62;\^)/gi;
             
@@ -221,9 +223,33 @@ function codeFormatter() {
             
         }
 
+        // DOCTYPE BACK TAG THINGY
+
+        var doctype2HTMLRegEx = /(?<=\^\^&#60-\^\!)[a-z0-9]{1,}[^\^]*\^\^&#62;\^/gi;
+
+
+            var doctype2HTMLMatches = currentText.match(doctype2HTMLRegEx);
+            var doctype2HTMLMatchesLenth = 0;
+
+            if(doctype2HTMLRegEx.test(currentText)){
+                doctype2HTMLMatchesLenth = doctype2HTMLMatches.length;
+            }
+            for (let i = 0; i < doctype2HTMLMatchesLenth; i++) {
+                var currentLocation = currentText.indexOf(doctype2HTMLMatches[i]);
+                var textLength = doctype2HTMLMatches[i].length;
+                var finished = doctype2HTMLMatches[i].split(/\^/)[0] + colorHTMLCOTags + "&#62;" + "</span>";
+                var frontTemp = currentText.slice(0,currentLocation);
+                var backTemp = currentText.slice(currentLocation + textLength);
+                currentText = frontTemp + finished + backTemp;
+            }
+
+            
+
         // DOCTYPE 
-        var doctypeHTMLRegEx = /(?<=\^\^&#60-\^\!)[a-z0-9]{1,}(?=~)/gi;
+        var doctypeHTMLRegEx = /\^\^&#60-\^\![a-z0-9]{1,}(?=~)/gi;
+        
         var doctypeMatches = currentText.match(doctypeHTMLRegEx);
+        
         var doctypeMatchesLength = 0;
         if (doctypeHTMLRegEx.test(currentText)) {
             doctypeMatchesLength = doctypeMatches.length;
@@ -233,12 +259,17 @@ function codeFormatter() {
             var currentLocation = currentText.indexOf(doctypeMatches[i]);
             var textLength = doctypeMatches[i].length;
             var frontTemp = currentText.slice(0, currentLocation);
+
+            var actualDoc = doctypeMatches[i].match(/[a-z]{1,}/gi);
+            console.log(actualDoc)
             
             var backTemp = currentText.slice(currentLocation + textLength);
 
-            currentText = frontTemp + colorHTMLDoctype + doctypeMatches[i] + "</span>" + backTemp;
+            currentText = frontTemp + colorHTMLCOTags + doctypeMatches[0].split(/[a-z]/gi)[0] + "</span>" + colorHTMLDoctype + actualDoc + "</span>" + backTemp;
 
         }
+
+        
 
         // COMMENTS 
 
@@ -266,13 +297,68 @@ function codeFormatter() {
             
             
             /* RE-encode some things */
-            currentText = currentText.replace(/\^\^&#62;\^/gi, "&#62;");
+            
             currentText =  currentText.replace(/\^\^&#60-\^/gi, "&#60-");
-            currentText = currentText.replace(/\*\*\*\*/g, "&#47-");
-            currentText = currentText.replace(/\^&#47-/g, "&#47-");
-            currentText = currentText.replace(/&#47;/g, "&#47-");
-            currentText = currentText.replace(/~/g, "&nbsp;");
-            var backHTMLRegEx = /&#60-&#47-[a-z0-9]{1,}/gi;
+            // currentText = currentText.replace(/\*\*\*\*/g, "^&#47;");
+            
+            
+            
+            var backHTMLRegEx = /&#60-\*\*\*\*[a-z0-9]{1,}/gi;
+
+            var frontHTMLRegEx = /&#60-[a-z0-9]{1,}/gi;
+
+            var front3HTMLRegEx = /(?<=&#60-)[a-z0-9]{1,}[^\^]*\*\*\*\*\^\^&#62;\^/gi;
+
+            var front3HTMLMatches = currentText.match(front3HTMLRegEx);
+            var front3HTMLMatchesLenth = 0;
+
+            if(front3HTMLRegEx.test(currentText)){
+                front3HTMLMatchesLenth = front3HTMLMatches.length;
+            }
+            for (let i = 0; i < front3HTMLMatchesLenth; i++) {
+                var currentLocation = currentText.indexOf(front3HTMLMatches[i]);
+                var textLength = front3HTMLMatches[i].length;
+                var finished = front3HTMLMatches[i].split(/\*/)[0] + colorHTMLCOTags + "&#47;&#62;" + "</span>";
+                var frontTemp = currentText.slice(0,currentLocation);
+                var backTemp = currentText.slice(currentLocation + textLength);
+                currentText = frontTemp + finished + backTemp;
+            }
+
+            var front2HTMLRegEx = /(?<=&#60-)[a-z0-9]{1,}[^\^]*\^\^&#62;\^/gi;
+
+            var front2HTMLMatches = currentText.match(front2HTMLRegEx);
+            var front2HTMLMatchesLenth = 0;
+
+            if(front2HTMLRegEx.test(currentText)){
+                front2HTMLMatchesLenth = front2HTMLMatches.length;
+            }
+            for (let i = 0; i < front2HTMLMatchesLenth; i++) {
+                var currentLocation = currentText.indexOf(front2HTMLMatches[i]);
+                var textLength = front2HTMLMatches[i].length;
+                var finished = front2HTMLMatches[i].split(/\^/)[0] + colorHTMLCOTags + "&#62;" + "</span>";
+                var frontTemp = currentText.slice(0,currentLocation);
+                var backTemp = currentText.slice(currentLocation + textLength);
+                currentText = frontTemp + finished + backTemp;
+            }
+
+
+            var back1HTMLRegEx = /(?<=&#60-\*\*\*\*)[a-z0-9]{1,}[^\^]*\^\^&#62;\^/gi;
+
+
+            var back1HTMLMatches = currentText.match(back1HTMLRegEx);
+            var back1HTMLMatchesLenth = 0;
+
+            if(back1HTMLRegEx.test(currentText)){
+                back1HTMLMatchesLenth = back1HTMLMatches.length;
+            }
+            for (let i = 0; i < back1HTMLMatchesLenth; i++) {
+                var currentLocation = currentText.indexOf(back1HTMLMatches[i]);
+                var textLength = back1HTMLMatches[i].length;
+                var finished = back1HTMLMatches[i].split(/\^/)[0] + colorHTMLCOTags + "&#62;" + "</span>";
+                var frontTemp = currentText.slice(0,currentLocation);
+                var backTemp = currentText.slice(currentLocation + textLength);
+                currentText = frontTemp + finished + backTemp;
+            }
             
             
 
@@ -298,7 +384,7 @@ function codeFormatter() {
                 
                 /* CONCAT TIMEEE */
 
-                var frontTemp = currentText.slice(0, currentLocation) + "&#60;";
+                var frontTemp = currentText.slice(0, currentLocation) + colorHTMLCOTags + "&#60;" + "</span>";
                  
                 var backTemp = currentText.slice(currentLocation + allTextLength);
 
@@ -325,9 +411,9 @@ function codeFormatter() {
             for(let i = 0; i < backAmount; i++) {
                 
                 var currentLocation = currentText.indexOf(currentText.match(backHTMLRegEx)[0]);
-                var textLocation = currentLocation + 10;
+                var textLocation = currentLocation + 9;
 
-                var currentMatchString = currentText.match(backHTMLRegEx)[0].slice(10);
+                var currentMatchString = currentText.match(backHTMLRegEx)[0].slice(9);
 
                 
                 var spanText = colorHTMLElement + currentMatchString + "</span>";
@@ -337,7 +423,7 @@ function codeFormatter() {
                 
                 /* CONCAT TIMEEE */
 
-                var frontTemp = currentText.slice(0, currentLocation) + "&#60;&#47;";
+                var frontTemp = currentText.slice(0, currentLocation) + colorHTMLCOTags + "&#60;&#47;" + "</span>";
                  
                 var backTemp = currentText.slice(currentLocation + allTextLength);
 
@@ -352,9 +438,12 @@ function codeFormatter() {
                 
                 
             }
-            currentText = currentText.replace(/&#47-/g, "&#47;");
+            currentText = currentText.replace(/\*\*\*\*/g, "&#47;");
+            currentText = currentText.replace(/\^\^&#62;\^/gi, "&#62;");
+            currentText = currentText.replace(/~/g, "&nbsp;");
             currentText = currentText.replace(/\*br\*/g, "<br>");
             currentText = currentText.replace(/&#60-/g, "&#60;");
+            
                 formatHTMLElems[e].innerHTML = currentText;
 
 
