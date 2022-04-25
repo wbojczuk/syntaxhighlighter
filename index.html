@@ -12,8 +12,14 @@
 <body>
     <div id="mainWrapper">
 <div class="center"><span class="title">syntaxhighlighter.js</span></div>
-   <div class="center"><div id="testDiv" class="syntaxHTML"></div></div> 
-<div class="center"><button id="editCode">Edit Code</button></div>
+
+<div class="small-title">HTML</div>
+   <div class="center"><div id="testHTML" class="syntaxHTML"></div></div> 
+<div class="center"><button class="editCode" value="testHTML">Edit Code</button></div>
+
+<div class="small-title">CSS</div>
+<div class="center"><div id="testCSS" class="syntaxCSS"></div></div> 
+<div class="center"><button class="editCode" value="testCSS">Edit Code</button></div>
 </div>
 <div id="typeCodeContainer" spellcheck="false">
     <textarea id="typeCode" cols="30" rows="10"></textarea>
@@ -21,25 +27,54 @@
    <div class="center"> <button id="submitCode">Submit Code &#62;</button></div>
 </div>
     
+<!-- SCRIPTS -->
 <script src="script.js"></script>
 <script defer>document.getElementById("submitCode").addEventListener("click", getCode);
 var valueTempHereLOL = "";
-    document.getElementById("typeCode").value = document.getElementById("testDiv").textContent.replace(/(<br[ ]*>)|(<br[ ]*\/>)/gi,"\n");
-    document.getElementById("editCode").addEventListener("click", function(){
+var CSSText = document.getElementById("testCSS").textContent.replace(/(<br[ ]*>)|(<br[ ]*\/>)/gi,"\n");
+var HTMLText = document.getElementById("testHTML").textContent.replace(/(<br[ ]*>)|(<br[ ]*\/>)/gi,"\n");
+var currentIDFORME = "";
+
+    var codeEdits = document.querySelectorAll(".editCode");
+    codeEdits.forEach(function(record){
+        record.addEventListener("click", function(evt){
+            var currrentText;
+            if (evt.target.value == "testCSS") {
+            currrentText = CSSText;
+            currentIDFORME = "testCSS";
+            } else if(evt.target.value == "testHTML") {
+                currrentText = HTMLText;
+                currentIDFORME = "testHTML";
+            }
+            console.log(evt.target.value)
+        document.getElementById("typeCode").value = currrentText;
         document.getElementById("typeCodeContainer").style.display = "block";
         document.getElementById("typeCodeContainer").style.top = "0";
-        valueTempHereLOL = document.getElementById("typeCode").value;
+        
     });
+    });
+    
+    
 
     document.getElementById("closeEditor").addEventListener("click", function(){
         document.getElementById("typeCodeContainer").style.top = "100vh";
         document.getElementById("typeCodeContainer").style.display = "none";
-        document.getElementById("typeCode").value = valueTempHereLOL;
+
+        if(currentIDFORME == "testHTML") {
+            HTMLText = document.getElementById("typeCode").value;
+        } else if(currentIDFORME == "testCSS") {
+            CSSText = document.getElementById("typeCode").value;
+        }
+        
 
     });
     
     function getCode() {
-        document.getElementById("testDiv").textContent = document.getElementById("typeCode").value;
+        // REFRESH
+        document.getElementById("testHTML").textContent = HTMLText;
+        document.getElementById("testCSS").textContent = CSSText;
+
+        document.getElementById(currentIDFORME).textContent = document.getElementById("typeCode").value;
         document.getElementById("typeCodeContainer").style.top = "100vh";
         document.getElementById("typeCodeContainer").style.display = "none";
         syntaxHighlighterScript();

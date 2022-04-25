@@ -25,9 +25,17 @@ var syntaxHighlighter = {
     HTMLElementCOTagsColor: "rgba(130, 130, 130, 0.788)",
     
     // DON'T PROCESS <br>,<br/>
-    HTMLKeepBR: true
+    HTMLKeepBR: true,
 
     // END HTML OPTIONS
+
+    // START CSS OPTIONS
+    CSSTextColor : "white",
+
+    CSSSelectorColor : "#debb3c",
+    CSSStyleRuleColor: "#34dbeb",
+    CSSStyleRuleValueColorString: "rgb(185, 85, 28)",
+    CSSStyleRuleValueColorNumeric: "rgb(119, 181, 110)"
 };
 
 syntaxHighlighterScript();
@@ -46,9 +54,18 @@ function syntaxHighlighterScript() {
     var HTMLLinkStyle = "<span style='text-decoration:underline'>";
 
     var colorHTMLCOTags = "<span style='color:" + syntaxHighlighter.HTMLElementCOTagsColor + "'>";
+
+    var colorCSSStyleRule = "<span style='color:" + syntaxHighlighter.CSSStyleRuleColor + "'>";
+
+    var colorCSSSelector = "<span style='color:" + syntaxHighlighter.CSSSelectorColor + "'>";
+
+    var colorCSSStyleRuleValueString = "<span style='color:" + syntaxHighlighter.CSSStyleRuleValueColorString + "'>";
+
+    var colorCSSStyleRuleValueNumeric = "<span style='color:" + syntaxHighlighter.CSSStyleRuleValueColorNumeric + "'>";
     
 
     var formatHTMLElems = document.querySelectorAll(".syntaxHTML");
+    console.log(formatHTMLElems.length)
 
     for(var e = 0; e < formatHTMLElems.length; e++) {
         formatHTMLElems[e].style.color = syntaxHighlighter.HTMLTextColor;
@@ -519,4 +536,81 @@ function syntaxHighlighterScript() {
 
 
     }
+
+    // CSSS
+
+    var syntaxCSSElems = document.querySelectorAll(".syntaxCSS");
+
+    for(let a = 0; a < syntaxCSSElems.length; a++) {
+        var currentText = syntaxCSSElems[a].textContent.replace(/ /g, "~");
+        currentText = currentText.replace(/\n/g, "<br>");
+        syntaxCSSElems[a].style.color = syntaxHighlighter.CSSTextColor;
+
+        var CSSStylesRegEx = /(?<=\{)[^\{\}]{1,}(?=\})/gi;
+        var CSSStylesMatches;
+        var CSSStylesLength = 0;
+        if(CSSStylesRegEx.test(currentText)) {
+            CSSStylesMatches = currentText.match(CSSStylesRegEx);
+            CSSStylesLength = CSSStylesMatches.length;
+        }
+        
+
+        for(var i = 0;  i < CSSStylesLength; i++) {
+            var currentStyleLocation = currentText.indexOf(CSSStylesMatches[i]);
+            var currentStyleLength = CSSStylesMatches[i].length;
+
+            var CSSStyleRulesRegEx = /[a-z0-9-]{1,}[~]*\:[^\;\{\}]{1,}(?=\;)/gi;
+            
+            var CSSStyleRulesMatches;
+            var CSSStyleRulesLength = 0;
+
+            if(CSSStyleRulesRegEx.test(currentText)) {
+                CSSStyleRulesMatches = CSSStylesMatches[i].match(CSSStyleRulesRegEx);
+                CSSStyleRulesLength = CSSStyleRulesMatches.length;
+            }
+            for (var u = 0; u < CSSStyleRulesLength; u++) {
+                var currentRuleLocation = CSSStylesMatches[i].indexOf(CSSStyleRulesMatches[u]);
+                var currentRuleLength = CSSStyleRulesMatches[u].length;
+                var splitArray = CSSStyleRulesMatches[u].split(":");
+                var finished = ""
+                if(/(?<!\#[a-z0-9]*)[0-9]{1,}/gi.test(splitArray[1])) {
+                    finished = colorCSSStyleRule + splitArray[0] + "</span>:" + colorCSSStyleRuleValueNumeric + splitArray[1] + "</span>";
+                } else {
+                    finished = colorCSSStyleRule + splitArray[0] + "</span>:" + colorCSSStyleRuleValueString + splitArray[1] + "</span>";
+                }
+                var frontTemp1 = CSSStylesMatches[i].slice(0,currentRuleLocation);
+                var backTemp1 = CSSStylesMatches[i].slice(currentRuleLength + currentRuleLocation);
+                CSSStylesMatches[i] = frontTemp1 + finished + backTemp1;
+                
+            }
+            var frontTemp = currentText.slice(0,currentStyleLocation);
+            var backTemp = currentText.slice(currentStyleLength + currentStyleLocation);
+            currentText = frontTemp + CSSStylesMatches[i] + backTemp
+
+            
+        }
+
+
+        
+        var CSSSelectorRegEx = /[-_a-z0-9\#\.\:]{1,}(?=[~]*\{)/gi; 
+        var CSSSelectorMatches;
+        var CSSSelectorLength = 0; 
+            if (CSSSelectorRegEx.test(currentText)) {
+                CSSSelectorMatches = currentText.match(CSSSelectorRegEx);
+                CSSSelectorLength = CSSSelectorMatches.length;
+            }
+            for(var i = 0; i < CSSSelectorLength; i++) {
+                var currentLocation = currentText.indexOf(CSSSelectorMatches[i]);
+                var currentLength = CSSSelectorMatches[i].length;
+                var frontTemp = currentText.slice(0,currentLocation);
+                var backTemp = currentText.slice(currentLength + currentLocation);
+                currentText = frontTemp + colorCSSSelector + CSSSelectorMatches[i] + "</span>" + backTemp
+            }
+
+            currentText = currentText.replace(/~/g, "&nbsp;");
+            syntaxCSSElems[a].innerHTML = currentText;
+        
+    }
+
+
 } 

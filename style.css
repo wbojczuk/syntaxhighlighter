@@ -11,28 +11,46 @@
     border-bottom: 4px solid #34dbeb;
 }
 
+.small-title {
+    text-align: center;
+    font-size: 3vw;
+    color: #34dbeb;
+    font-family: 'Source Code Pro', monospace;
+    margin-top: 5vw;
+}
+
 .center {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-#testDiv {
+#testHTML {
     padding: 1vw;
-    margin-top: 5vw;
     text-align: left;
     font-family: 'Source Code Pro', monospace;
     font-size: 1.5vw;
     width: 90vw;
     max-height: 80vh;
     border: 1px solid rgb(111, 205, 255);
-    overflow-y: scroll;
+    overflow-y: auto;
+}
+
+#testCSS {
+    padding: 1vw;
+    text-align: left;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 1.5vw;
+    width: 90vw;
+    max-height: 80vh;
+    border: 1px solid rgb(111, 205, 255);
+    overflow-y: auto;
 }
 
 body {
     margin: 0;
     background-color: black;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 #typeCode {
@@ -64,7 +82,7 @@ body {
 
 #typeCodeContainer {
     background-color: rgba(0, 0, 0, 0.8);
-    position: absolute;
+    position: fixed;
     width: 100vw;
     height: 100vh;
     top: 100vh;
@@ -80,12 +98,14 @@ color: #34dbeb;
 
 }
 button:hover {
-    background-color: rgb(94, 94, 94);
+    background-color: rgba(94, 94, 94, 0.349);
 }
 #submitCode {
     font-family: 'Source Code Pro', monospace;
     color: white;
 }
-#editCode {
+.editCode {
     margin-top: 1vw;
+    margin-bottom: 2vw;
+    background-color: rgba(60, 60, 60, 0.107);
 }

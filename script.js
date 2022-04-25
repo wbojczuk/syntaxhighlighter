@@ -1,6 +1,6 @@
 
 
-document.getElementById("testDiv").textContent ='<!DOCTYPE html><br>\
+document.getElementById("testHTML").textContent = '<!DOCTYPE html><br>\
 <html lang="en-us"><br>\
     <head><br>\
         <meta charset="UTF-8"><br>\
@@ -13,5 +13,33 @@ document.getElementById("testDiv").textContent ='<!DOCTYPE html><br>\
         <script src="syntaxhighlighter.js" defer></script><br>\
         <a href="https://williambojczuk.com" target="_blank">Myself</a><br>\
     </head>';
+
+
+    document.getElementById("testCSS").textContent = 'button {<br>\
+    cursor: pointer;<br>\
+    padding: 1vw 3vw;<br>\
+    font-size: 2vw;<br>\
+    background-color: rgb(60, 60, 60);<br>\
+    color: #34dbeb;<br>\
+    }<br>\
+.center {<br>\
+    display: flex;<br>\
+    align-items: center;<br>\
+    justify-content: center;<br>\
+}<br>\
+#testHTML {<br>\
+    padding: 1vw;<br>\
+    text-align: left;<br>\
+    font-family: "Source Code Pro", monospace;<br>\
+    max-height: 80vh;<br>\
+    border: 1px solid rgb(111, 205, 255);<br>\
+    overflow-y: auto;<br>\
+}';
+
+
+
+
+
+
 
     
