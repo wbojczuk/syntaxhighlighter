@@ -48,6 +48,7 @@ var currentIDFORME = "";
             }
             console.log(evt.target.value)
         document.getElementById("typeCode").value = currrentText;
+        document.getElementById("mainWrapper").style.overflow = "hidden";
         document.getElementById("typeCodeContainer").style.display = "block";
         document.getElementById("typeCodeContainer").style.top = "0";
         
@@ -57,24 +58,22 @@ var currentIDFORME = "";
     
 
     document.getElementById("closeEditor").addEventListener("click", function(){
+        document.getElementById("mainWrapper").style.overflow = "auto";
         document.getElementById("typeCodeContainer").style.top = "100vh";
         document.getElementById("typeCodeContainer").style.display = "none";
-
-        if(currentIDFORME == "testHTML") {
-            HTMLText = document.getElementById("typeCode").value;
-        } else if(currentIDFORME == "testCSS") {
-            CSSText = document.getElementById("typeCode").value;
-        }
-        
-
     });
     
     function getCode() {
         // REFRESH
         document.getElementById("testHTML").textContent = HTMLText;
         document.getElementById("testCSS").textContent = CSSText;
-
+        if(currentIDFORME == "testHTML") {
+            HTMLText = document.getElementById("typeCode").value;
+        } else if(currentIDFORME == "testCSS") {
+            CSSText = document.getElementById("typeCode").value;
+        }
         document.getElementById(currentIDFORME).textContent = document.getElementById("typeCode").value;
+        document.getElementById("mainWrapper").style.overflow = "auto";
         document.getElementById("typeCodeContainer").style.top = "100vh";
         document.getElementById("typeCodeContainer").style.display = "none";
         syntaxHighlighterScript();

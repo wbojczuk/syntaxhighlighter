@@ -34,38 +34,51 @@ var syntaxHighlighter = {
 
     CSSSelectorColor : "#debb3c",
     CSSStyleRuleColor: "#34dbeb",
-    CSSStyleRuleValueColorString: "rgb(185, 85, 28)",
-    CSSStyleRuleValueColorNumeric: "rgb(119, 181, 110)"
+    CSSValueColorString: "rgb(185, 85, 28)",
+    CSSValueColorNumeric: "rgb(119, 181, 110)",
+    CSSRGBAHighlight: "#d6e87d",
+    CSSURLHighlight: "#fffd72",
+    CSSAtColor: "#803d90",
+    CSSStringColor: "#b5612d",
 };
 
 syntaxHighlighterScript();
 function syntaxHighlighterScript() {
     
-    var colorHTMLElement = "<span style='color:" + syntaxHighlighter.HTMLElementColor + "'>";
+    const colorHTMLElement = "<span style='color:" + syntaxHighlighter.HTMLElementColor + "'>";
     
-    var colorHTMLAttribute = "<span style='color:" + syntaxHighlighter.HTMLAttributeColor + "'>";
+    const colorHTMLAttribute = "<span style='color:" + syntaxHighlighter.HTMLAttributeColor + "'>";
 
-    var colorHTMLString = "<span style='color:" + syntaxHighlighter.HTMLStringColor + "'>";
+    const colorHTMLString = "<span style='color:" + syntaxHighlighter.HTMLStringColor + "'>";
 
-    var colorHTMLDoctype = "<span style='color:" + syntaxHighlighter.HTMLDoctypeColor + "'>";
+    const colorHTMLDoctype = "<span style='color:" + syntaxHighlighter.HTMLDoctypeColor + "'>";
 
-    var colorHTMLComment = "<span style='color:" + syntaxHighlighter.HTMLCommentColor + "'>";
+    const colorHTMLComment = "<span style='color:" + syntaxHighlighter.HTMLCommentColor + "'>";
 
-    var HTMLLinkStyle = "<span style='text-decoration:underline'>";
+    const HTMLLinkStyle = "<span style='text-decoration:underline'>";
 
-    var colorHTMLCOTags = "<span style='color:" + syntaxHighlighter.HTMLElementCOTagsColor + "'>";
+    const colorHTMLCOTags = "<span style='color:" + syntaxHighlighter.HTMLElementCOTagsColor + "'>";
 
-    var colorCSSStyleRule = "<span style='color:" + syntaxHighlighter.CSSStyleRuleColor + "'>";
+    const colorCSSStyleRule = "<span style='color:" + syntaxHighlighter.CSSStyleRuleColor + "'>";
 
-    var colorCSSSelector = "<span style='color:" + syntaxHighlighter.CSSSelectorColor + "'>";
+    const colorCSSSelector = "<span style='color:" + syntaxHighlighter.CSSSelectorColor + "'>";
 
-    var colorCSSStyleRuleValueString = "<span style='color:" + syntaxHighlighter.CSSStyleRuleValueColorString + "'>";
+    const colorCSSValueString = "<span style='color:" + syntaxHighlighter.CSSValueColorString + "'>";
 
-    var colorCSSStyleRuleValueNumeric = "<span style='color:" + syntaxHighlighter.CSSStyleRuleValueColorNumeric + "'>";
+    const colorCSSValueNumeric = "<span style='color:" + syntaxHighlighter.CSSValueColorNumeric + "'>";
+
+    const colorCSSRGBA = "<span style='color:" +  syntaxHighlighter.CSSRGBAHighlight + "'>";
+
+    const colorCSSAt = "<span style='color:" +  syntaxHighlighter.CSSAtColor + "'>";
+
+    const colorCSSString = "<span style='color:" +  syntaxHighlighter.CSSStringColor + "'>";
+    const colorCSSURL = "<span style='color:" +  syntaxHighlighter.CSSURLHighlight + "'>";
+
+    const CSSLinkStyle = "<span style='text-decoration:underline'>";
     
 
     var formatHTMLElems = document.querySelectorAll(".syntaxHTML");
-    console.log(formatHTMLElems.length)
+
 
     for(var e = 0; e < formatHTMLElems.length; e++) {
         formatHTMLElems[e].style.color = syntaxHighlighter.HTMLTextColor;
@@ -563,6 +576,7 @@ function syntaxHighlighterScript() {
             
             var CSSStyleRulesMatches;
             var CSSStyleRulesLength = 0;
+            
 
             if(CSSStyleRulesRegEx.test(currentText)) {
                 CSSStyleRulesMatches = CSSStylesMatches[i].match(CSSStyleRulesRegEx);
@@ -572,11 +586,19 @@ function syntaxHighlighterScript() {
                 var currentRuleLocation = CSSStylesMatches[i].indexOf(CSSStyleRulesMatches[u]);
                 var currentRuleLength = CSSStyleRulesMatches[u].length;
                 var splitArray = CSSStyleRulesMatches[u].split(":");
-                var finished = ""
-                if(/(?<!\#[a-z0-9]*)[0-9]{1,}/gi.test(splitArray[1])) {
-                    finished = colorCSSStyleRule + splitArray[0] + "</span>:" + colorCSSStyleRuleValueNumeric + splitArray[1] + "</span>";
+                var finished = "";
+                if(/(?<!['"][^\:\;\{\}]*)(?<!\#[a-z0-9]*)[0-9]{1,}/gi.test(splitArray[1])) {
+                    if (/rgba/gi.test(splitArray[1])) {
+                        splitArray[1] = splitArray[1].replace(/rgba/g, colorCSSRGBA + "rgba" + "</span>");
+                    splitArray[1] = splitArray[1].replace(/RGBA/g, colorCSSRGBA + "RGBA" + "</span>");
+                    } else if (/rgb/gi.test(splitArray[1])) {
+                    splitArray[1] = splitArray[1].replace(/rgb/g, colorCSSRGBA + "rgb" + "</span>");
+                    splitArray[1] = splitArray[1].replace(/RGB/g, colorCSSRGBA + "RGB" + "</span>");
+                    }
+                    finished = colorCSSStyleRule + splitArray[0] + "</span>:" + colorCSSValueNumeric + splitArray[1] + "</span>";
+                    
                 } else {
-                    finished = colorCSSStyleRule + splitArray[0] + "</span>:" + colorCSSStyleRuleValueString + splitArray[1] + "</span>";
+                    finished = colorCSSStyleRule + splitArray[0] + "</span>:" + colorCSSValueString + splitArray[1] + "</span>";
                 }
                 var frontTemp1 = CSSStylesMatches[i].slice(0,currentRuleLocation);
                 var backTemp1 = CSSStylesMatches[i].slice(currentRuleLength + currentRuleLocation);
@@ -589,24 +611,137 @@ function syntaxHighlighterScript() {
 
             
         }
+        //CSS STRINGS 
+        const CSSStringRegEx = /["][^"]*["](?![^\;\{\}]*\{)/gi;
+        const CSSStringMatches = currentText.match(CSSStringRegEx);
+        let CSSStringLength = 0;
+        if (CSSStringRegEx.test(currentText)) {
+            CSSStringLength = CSSStringMatches.length;
+        }
+        for(var i = 0; i < CSSStringLength; i++) {
+            var currentLocation = currentText.indexOf(CSSStringMatches[i]);
+            var currentLength = CSSStringMatches[i].length;
+            var frontTemp = currentText.slice(0,currentLocation);
+            var backTemp = currentText.slice(currentLength + currentLocation);
+            currentText = frontTemp + colorCSSString + CSSStringMatches[i] + "</span>" + backTemp
+        }
 
+        // CSS links
 
-        
-        var CSSSelectorRegEx = /[-_a-z0-9\#\.\:]{1,}(?=[~]*\{)/gi; 
+        var CSSLinkRegEx = /(https|http):\/\/[^~"'\)\()]*/gi;
+        var CSSLinkMatchesLength = 0;
+        const CSSLinkMatches = currentText.match(CSSLinkRegEx);
+            if(CSSLinkRegEx.test(currentText)) {
+                CSSLinkMatchesLength = CSSLinkMatches.length;
+            }
+
+            for (let i = 0; i < CSSLinkMatchesLength; i++) {
+                var currentLocation = currentText.indexOf(CSSLinkMatches[i]);
+                var currentTextLength = CSSLinkMatches[i].length;
+                var frontTemp = currentText.slice(0,currentLocation);
+                var backTemp = currentText.slice(currentLocation + currentTextLength);
+                currentText = frontTemp + CSSLinkStyle + CSSLinkMatches[i] + "</span>" + backTemp;
+            }
+
+            // CSS URL() HIGHLIGHTS
+            currentText = currentText.replace(/(?<!["][~]*)url(?=\()/g, colorCSSURL + "url</span>");
+            currentText = currentText.replace(/(?<!["][~]*)URL(?=\()/g, colorCSSURL + "URL</span>");
+
+        // CSS SELECTOR
+        var CSSSelectorRegEx = /(?<![\{\@][^\}\;]*)(?<!\{([^\{\}]*[\{]{1,}[^\{\}]*[\}][^\{\}]*){1,2})[-\_a-z0-9\#\.\:~\(\)\[\]'"=]{1,}[~]*\{/gi; 
         var CSSSelectorMatches;
         var CSSSelectorLength = 0; 
             if (CSSSelectorRegEx.test(currentText)) {
                 CSSSelectorMatches = currentText.match(CSSSelectorRegEx);
                 CSSSelectorLength = CSSSelectorMatches.length;
             }
+         
             for(var i = 0; i < CSSSelectorLength; i++) {
                 var currentLocation = currentText.indexOf(CSSSelectorMatches[i]);
                 var currentLength = CSSSelectorMatches[i].length;
                 var frontTemp = currentText.slice(0,currentLocation);
                 var backTemp = currentText.slice(currentLength + currentLocation);
-                currentText = frontTemp + colorCSSSelector + CSSSelectorMatches[i] + "</span>" + backTemp
+                CSSSelectorMatches[i] = CSSSelectorMatches[i].split("{")[0];
+                currentText = frontTemp + colorCSSSelector + CSSSelectorMatches[i] + "</span>{" + backTemp;
             }
 
+            // @keyframes and stuff
+
+            // @KEYFRAMES Name
+            const CSSKeyNameRegEx = /(?<=\@keyframes[~]{1,})[a-z_0-9-]{1,}/gi;
+            const CSSKeyNameMatches = currentText.match(CSSKeyNameRegEx);
+           
+            let CSSKeyNameLength = 0;
+            if (CSSKeyNameRegEx.test(currentText)) {
+                CSSKeyNameLength = CSSKeyNameMatches.length;
+            }
+            for (let i = 0; i < CSSKeyNameLength; i++){
+                const currentLocation = currentText.indexOf(CSSKeyNameMatches[i]);
+                const currentLength = CSSKeyNameMatches[i].length;
+                const frontTemp = currentText.slice(0,currentLocation);
+                const backTemp = currentText.slice(currentLength + currentLocation);
+                currentText = frontTemp + colorCSSStyleRule + CSSKeyNameMatches[i] + "</span>" + backTemp;
+            }
+            
+// @Selector
+            const CSSAtSelectorRegEx = /\@[a-z_0-9]*[~]/gi;
+            
+            var CSSAtMatches = currentText.match(CSSAtSelectorRegEx);
+            
+            var CSSAtLength = 0;
+            if (CSSAtSelectorRegEx.test(currentText)) {
+                CSSAtLength = CSSAtMatches.length;
+            }
+            for (let e = 0; e < CSSAtLength; e++){
+                const currentLocation = currentText.indexOf(CSSAtMatches[e]);
+                const currentLength = CSSAtMatches[e].length;
+                const frontTemp = currentText.slice(0,currentLocation);
+                const backTemp = currentText.slice(currentLength + currentLocation);
+                CSSAtMatches[e] = CSSAtMatches[e].replace("~", "&nbsp;");
+                currentText = frontTemp + colorCSSAt + CSSAtMatches[e] + "</span>" + backTemp
+            }
+
+            // COMMENTS 
+
+       
+        var commentCSSRegEx = /\/\*[^\*]*\*\//gi;
+
+        var commentCSSMatches = currentText.match(commentCSSRegEx);
+        var commentCSSMatchesLength = 0;
+
+        if (commentCSSRegEx.test(currentText)) {
+            commentCSSMatchesLength = commentCSSMatches.length;
+        }
+
+        for (let i = 0; i < commentCSSMatchesLength; i++) {
+            var currentLocation = currentText.indexOf(commentCSSMatches[i]);
+            var textLength = commentCSSMatches[i].length;
+            var frontTemp = currentText.slice(0, currentLocation);
+            
+            var backTemp = currentText.slice(currentLocation + textLength);
+            
+
+            // REPLACE COLORS WITH COMMENT COLORS
+            var extraColorsRegEx = /<span style='color:[^'>]*'>/gi;
+            var extraColorsLength = 0;
+            var extraColorsMatches = commentCSSMatches[i].match(extraColorsRegEx);
+            if (extraColorsRegEx.test(commentCSSMatches[i])){
+                extraColorsLength = extraColorsMatches.length;
+            }
+            for(let y = 0; y < extraColorsLength; y++) {
+                var currentColorLocation = commentCSSMatches[i].indexOf(extraColorsMatches[y]);
+                var currentColorLength = extraColorsMatches[y].length;
+                var frontColorTemp = commentCSSMatches[i].slice(0, currentColorLocation);
+                var backColorTemp = commentCSSMatches[i].slice(currentColorLocation + currentColorLength);
+                commentCSSMatches[i] = frontColorTemp + colorHTMLComment + backColorTemp;
+
+            }
+
+            currentText = frontTemp + colorHTMLComment + commentCSSMatches[i] + "</span>" + backTemp;
+
+        }
+            
+           
             currentText = currentText.replace(/~/g, "&nbsp;");
             syntaxCSSElems[a].innerHTML = currentText;
         

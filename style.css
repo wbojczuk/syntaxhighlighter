@@ -40,7 +40,7 @@
     padding: 1vw;
     text-align: left;
     font-family: 'Source Code Pro', monospace;
-    font-size: 1.5vw;
+    font-size: 1vw;
     width: 90vw;
     max-height: 80vh;
     border: 1px solid rgb(111, 205, 255);
@@ -54,12 +54,15 @@ body {
 }
 
 #typeCode {
-    width: 100%;
+    width: 90%;
     margin-top: 10vh;
+    margin-left: 5%;
+    margin-right: 5%;
     font-size: 2vw;
     height: 70%;
     background-color: rgba(47, 47, 47, 1);
     color: white;
+    overflow-y: scroll;
     
 }
 
@@ -71,7 +74,7 @@ body {
     width: 4vw;
     height: 4vw;
     font-size: 4vw;
-    right: 1vw;
+    right: 5vw;
     font-weight: 700;
 }
 
@@ -103,6 +106,9 @@ button:hover {
 #submitCode {
     font-family: 'Source Code Pro', monospace;
     color: white;
+}
+#submitCode:hover {
+    background-color: rgb(92, 92, 92)
 }
 .editCode {
     margin-top: 1vw;

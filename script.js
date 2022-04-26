@@ -15,13 +15,15 @@ document.getElementById("testHTML").textContent = '<!DOCTYPE html><br>\
     </head>';
 
 
-    document.getElementById("testCSS").textContent = 'button {<br>\
+    document.getElementById("testCSS").textContent = '@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@600&display=swap");<br>\
+    button {<br>\
     cursor: pointer;<br>\
     padding: 1vw 3vw;<br>\
     font-size: 2vw;<br>\
     background-color: rgb(60, 60, 60);<br>\
     color: #34dbeb;<br>\
     }<br>\
+    /* I... Made it for CSS too :) */<br>\
 .center {<br>\
     display: flex;<br>\
     align-items: center;<br>\
@@ -34,6 +36,10 @@ document.getElementById("testHTML").textContent = '<!DOCTYPE html><br>\
     max-height: 80vh;<br>\
     border: 1px solid rgb(111, 205, 255);<br>\
     overflow-y: auto;<br>\
+}<br>\
+@keyframes animation {<br>\
+    from{background-position: 0%;}<br>\
+    to{background-position: 100%;}<br>\
 }';
 
 
