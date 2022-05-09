@@ -4,7 +4,10 @@ Demo - https://wbojczuk.github.io/syntaxhighlighter/
 
 About Syntax Highlighter:
 Created in 2022 by William Bojczuk, Syntax Highlighter uses a combination of Vanilla JavaScript and complex Regular Expressions to highlight the code.
-All colors are customizable and accept any color values supported by CSS3. Options can be changed globally via the "syntaxHighlighter" object.
+All colors are customizable and accept any color values supported by CSS3. 
+
+Options can be changed globally via the "syntaxHighlighter" object.
+
 SyntaxHighlighter supports input formatted in elements such as text-area elements. The program will convert input line-breaks "/n" to HTML5 line breaks "<br>" upon program execution.
 
 HTML special characters are converted into HTML Entities during initial text processing.
