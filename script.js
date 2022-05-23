@@ -30,7 +30,7 @@ document.getElementById("testHTML").textContent = '<!DOCTYPE html><br>\
     justify-content: center;<br>\
 }<br>\
 #testHTML {<br>\
-    background-image: url('./img/background.jpg');<br>\
+    background-image: url("./img/background.jpg");<br>\
     padding: 1vw;<br>\
     text-align: left;<br>\
     font-family: "Source Code Pro", monospace;<br>\
